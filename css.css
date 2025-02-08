@@ -1,0 +1,44 @@
+h1{
+    text-align: center;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-top: 80px;
+    font-size: 60px;
+    color: aqua;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+body {
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+    background-image: linear-gradient(-35deg, rgb(255, 217, 0), rgb(185, 158, 2), rgb(129, 110, 1), rgb(48, 41, 0));
+    animation: gradient 10s ease infinite;
+    background-size: 400% 400%;
+    height: 1000px;
+}
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+#layer1{
+    margin-top: 100px;
+    left: 50%;
+    position: absolute;
+    background-color: green;
+    width: 600px;
+    height: 600px;
+    transform: translate(-50%,0);
+}
+.button{
+    padding: 0;
+    margin-left: 13px;
+    margin-top: 14px;
+    width: 180px;
+    height: 180px;
+}

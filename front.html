@@ -11,8 +11,24 @@
         Can you beat the Tic Tac Toe machine?
     </h1>
     <body>
-
-        <div id="layer1">
+        <div id = "layer1">
+            <select id="difficulty" class="settings">
+                <option value="-1" id = "difdefault">Pick a difficulty</option>
+                <optgroup id = "difdefault1" label="Pick a difficulty" hidden></optgroup>
+                <option value="0">Easy</option>
+                <option value="1">Medium</option>
+                <option value="2">Hard</option>
+                
+            </select>
+            <select id="first" class="settings">
+                <option value="-1" id="firstdefault">Pick who goes first</option>
+                <optgroup id = "firstdefault1" label="Pick who goes first" hidden></optgroup>
+                <option value="0">You first</option>
+                <option value="1">Me first</option>
+            </select>
+            <button id = "restart" class = "settings" type="button">Restart</button>
+        </div>
+        <div id="layer2">
             <button id="button1" class="button" type="button"></button>
             <button id="button2" class="button" type="button"></button>
             <button id="button3" class="button" type="button"></button>

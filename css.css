@@ -27,7 +27,14 @@ body {
 	}
 }
 #layer1{
-    margin-top: 100px;
+    left:50%;
+    margin-top: 50px;
+    transform: translate(-50%,0);
+    position: absolute;
+    width: max-content;
+}
+#layer2{
+    margin-top: 150px;
     left: 50%;
     position: absolute;
     background-color: green;
@@ -42,3 +49,11 @@ body {
     width: 180px;
     height: 180px;
 }
+
+.settings{
+    height: 50px;
+    width: 200px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+

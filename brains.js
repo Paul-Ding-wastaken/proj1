@@ -4,6 +4,11 @@ var buttons = new Array(9);
 
 
 function playermove(a){
+    if(a < 1){
+       return false; 
+    }
+    started = true;
+    a--;
     var playermoves = 0;
     var cpumoves = 0;
     for(let i = 0; i < 9; i++){
@@ -13,12 +18,14 @@ function playermove(a){
             cpumoves += 1;
         }
     }
-    if(settings[1] == 0 && playermoves == cpumoves){
+    if(settings[1] == 0 && playermoves + 1 == cpumoves){
         boardstate[a] = 1;
-        analyzeboard();
-    }else if(settings[1] == 1 && playermoves + 1 == cpumoves){
+        updateboard();
+        //analyzeboard();
+    }else if(settings[1] == 1 && playermoves == cpumoves){
         boardstate[a] = 1;
-        analyzeboard();
+        updateboard();
+        //analyzeboard();
     }else{
         console.log("another cheater huh?")
     }
@@ -94,10 +101,10 @@ var c = 0;
     }else if(settings[0] == 2){
     var move = -1;
     var couldwin = -1;
-    //the regret of not using a 2D matrix sets in :skull
+
 
     }else{
-        // impossibility. the person is using console commands
+
         console.log("Why try? Stop it; Get some help.");
     }
 
@@ -122,14 +129,17 @@ function updateboard(){
             }else{
                 buttons[i].innerHTML = "O";
             }
+            buttons[i].disabled = true;
         }else if(boardstate[i] == 1){
             if(settings[1] == 1){
                 buttons[i].innerHTML = "X";
             }else{
                 buttons[i].innerHTML = "O";
             }
+            buttons[i].disabled = true;
         }else{
             buttons[i].innerHTML = "&#8205";
+            buttons[i].disabled = false;
         }
     }
 }
@@ -194,7 +204,7 @@ function initialize(){
 
 
 var started = false;
-function click(a){
+function clicked(a) {
     playermove(a);
 }
 
@@ -213,7 +223,12 @@ function firstswap(a){
 }
 
 function restart(){
+    started = false;
+    for(let i = 0; i < 9; i++){
+        boardstate[i] = -1;
+    }
     initializeboard();
+
 }
 
 

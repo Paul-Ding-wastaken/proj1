@@ -1,14 +1,6 @@
 var boardstate = new Array(9).fill(-1);
-var settings = new Array(2).fill(-1); //
-var button1 = document.getElementById("button1");
-var button2 = document.getElementById("button2");
-var button3 = document.getElementById("button3");
-var button4 = document.getElementById("button4");
-var button5 = document.getElementById("button5");
-var button6 = document.getElementById("button6");
-var button7 = document.getElementById("button7");
-var button8 = document.getElementById("button8");
-var button9 = document.getElementById("button9");
+var settings = new Array(2).fill(-1);
+var buttons = new Array(9);
 
 
 function playermove(a){
@@ -123,27 +115,57 @@ var c = 0;
 }
 
 function updateboard(){
-    if(settings[0] != -1 && settings[1] != -1){
-        if(settings[1] == 0){
-            boardstate[4] = 0;   
+    for(let i = 0; i < 9; i++){
+        if(boardstate[i] == 0){
+            if(settings[1] == 0){
+                buttons[i].innerHTML = "X";
+            }else{
+                buttons[i].innerHTML = "O";
+            }
+        }else if(boardstate[i] == 1){
+            if(settings[1] == 1){
+                buttons[i].innerHTML = "X";
+            }else{
+                buttons[i].innerHTML = "O";
+            }
+        }else{
+            buttons[i].innerHTML = "&#8205";
         }
-    }else{
-        console.log("checkpoint1");
-        button1.disabled = true;
-        button2.disabled = true;
-        button3.disabled = true;
-        button4.disabled = true;
-        button5.disabled = true;
-        button6.disabled = true;
-        button7.disabled = true;
-        button8.disabled = true;
-        button9.disabled = true;
     }
 }
 
+function initializeboard(){
+    if(!buttons[0]){
+        initialize();
+    }
+    if(settings[0] != -1 && settings[1] != -1){
+        if(settings[1] == 0){
+            boardstate[4] = 0;   
+        }else{
+            boardstate[4] = -1;
+        }
+        for(let i = 0; i < 9; i++){
+            buttons[i].disabled = false;
+        }
+        updateboard();
+    }else{
+        for(let i = 0; i < 9; i++){
+            buttons[i].disabled = true;
+        }
+    }
+}
 
-
-
+function initialize(){
+    buttons[0] = document.getElementById("button1");
+    buttons[1] = document.getElementById("button2");
+    buttons[2] = document.getElementById("button3");
+    buttons[3] = document.getElementById("button4");
+    buttons[4] = document.getElementById("button5");
+    buttons[5] = document.getElementById("button6");
+    buttons[6] = document.getElementById("button7");
+    buttons[7] = document.getElementById("button8");
+    buttons[8] = document.getElementById("button9");
+}
 
 
 
@@ -167,8 +189,8 @@ function updateboard(){
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-document.getElementById("difficulty").onchange = difficultyswap;
-document.getElementById("first").onchange = firstswap;
+//document.getElementById("difficulty").onchange = difficultyswap;
+//document.getElementById("first").onchange = firstswap;
 
 
 var started = false;
@@ -176,15 +198,28 @@ function click(a){
     playermove(a);
 }
 
-function difficultyswap(){
-    console.log("checkpoint2");
+function difficultyswap(a){
     if(!started){
-        settings[1] = document.getElementById("difficulty");
+        settings[0] = a;
     }
+    initializeboard();
 }
 
-function firstswap(){
+function firstswap(a){
     if(!started){
-        settings[1] = document.getElementById("first");
+        settings[1] = a;
     }
+    initializeboard();
 }
+
+function restart(){
+    initializeboard();
+}
+
+
+
+
+
+
+
+

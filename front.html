@@ -6,13 +6,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Amazing Tic tac toe bot</title>
         <link rel="stylesheet" href="css.css">
+        <script src = "brains.js"></script> 
     </head>
     <h1>
         Can you beat the Tic Tac Toe machine?
     </h1>
     <body>
         <div id = "layer1">
-            <select id="difficulty" class="settings">
+            <select id="difficulty" class="settings" onchange="difficultyswap(this.options[this.selectedIndex].value)">
                 <option value="-1" id = "difdefault">Pick a difficulty</option>
                 <optgroup id = "difdefault1" label="Pick a difficulty" hidden></optgroup>
                 <option value="0">Easy</option>
@@ -20,7 +21,7 @@
                 <option value="2">Hard</option>
                 
             </select>
-            <select id="first" class="settings">
+            <select id="first" class="settings" onchange="firstswap(this.options[this.selectedIndex].value)">
                 <option value="-1" id="firstdefault">Pick who goes first</option>
                 <optgroup id = "firstdefault1" label="Pick who goes first" hidden></optgroup>
                 <option value="0">You first</option>
@@ -28,16 +29,16 @@
             </select>
             <button id = "restart" class = "settings" type="button">Restart</button>
         </div>
-        <div id="layer2">
-            <button id="button1" class="button" type="button"></button>
-            <button id="button2" class="button" type="button"></button>
-            <button id="button3" class="button" type="button"></button>
-            <button id="button4" class="button" type="button"></button>
-            <button id="button5" class="button" type="button"></button>
-            <button id="button6" class="button" type="button"></button>
-            <button id="button7" class="button" type="button"></button>
-            <button id="button8" class="button" type="button"></button>
-            <button id="button9" class="button" type="button"></button>
+        <div id="layer2" >
+            <button id="button1" class="button" type="button">&#8205</button>
+            <button id="button2" class="button" type="button">&#8205</button>
+            <button id="button3" class="button" type="button">&#8205</button>
+            <button id="button4" class="button" type="button">&#8205</button>
+            <button id="button5" class="button" type="button">&#8205</button>
+            <button id="button6" class="button" type="button">&#8205</button>
+            <button id="button7" class="button" type="button">&#8205</button>
+            <button id="button8" class="button" type="button">&#8205</button>
+            <button id="button9" class="button" type="button" onload="initialize()">&#8205</button>
         </div>
         
     </body>

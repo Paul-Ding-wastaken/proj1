@@ -1,7 +1,7 @@
 var boardstate = new Array(9).fill(-1);
 var settings = new Array(2).fill(-1);
 var buttons = new Array(9);
-
+var gameover = false;
 
 function playermove(a){
     if(a < 1){
@@ -11,7 +11,7 @@ function playermove(a){
     a--;
     var playermoves = 0;
     var cpumoves = 0;
-    for(let i = 0; i < 9; i++){
+    for (let i = 0; i < 9; i++) {
         if(boardstate[i] == 1){
             playermoves += 1;
         }else if(boardstate[i] == 0){
@@ -32,11 +32,9 @@ function playermove(a){
     
 }
 
-
-
 function analyze(a){
     var inarow = 0;
-    for(let i = 0; i < 9; i++){ //check hori
+    for (let i = 0; i < 9; i++) {
         if(a != boardstate[i] || i%3 == 0){
             inarow = 0;
         }
@@ -48,7 +46,7 @@ function analyze(a){
         }
     }
     inarow = 0;
-    for(let i = 0; i < 9; i += 3){ //check ver
+    for (let i = 0; i < 9; i += 3) {
         if(a == boardstate[i]){
             inarow += 1;
         }else{
@@ -57,24 +55,33 @@ function analyze(a){
         if(inarow == 3){
             return true;
         }
-        if(8 > i > 5){
+        
+        if(8 > i && i > 5){
+            
             inarow = 0;
             i -= 8;
         }
     }
-
-    if(boardstate[0] + boardstate[4] + boardstate[8] == 3 || boardstate[2] + boardstate[4] + boardstate[6] == 3){
-        return true;
+    if(a == 1){
+        if(boardstate[0] + boardstate[4] + boardstate[8] == 3 || boardstate[2] + boardstate[4] + boardstate[6] == 3){
+            return true;
+        }
+    }else{
+        if(boardstate[0] == 0 && boardstate[4] == 0 && boardstate[8] == 0){
+            return true;
+        }
+        if(boardstate[2] == 0 && boardstate[4] == 0 && boardstate[6] == 0){
+            return true;
+        }
     }
     return false;
 }
 
-
-function planmove(a){ //1 means defense; 0 means offense
+function planmove(a){
     var targethole = -1;
     var inarow = 0;
     var canfill = true;
-    for(let i = 0; i < 9; i++){ //technically it could be brought to O(n) but it would increase memory so we sticking with O(2n)
+    for (let i = 0; i < 9; i++) {
         if(i%3 == 0){
             inarow = 0;
             canfill = true;
@@ -87,12 +94,11 @@ function planmove(a){ //1 means defense; 0 means offense
             targethole = i;
         }
         if(inarow == 2 && canfill && (i+1)%3 == 0){
-            console.log("here1");
             return targethole;
         }
     }
     inarow = 0;
-    for(let i = 0; i < 9; i += 3){ // have 3 vars that add and if they equal 2 ,and fill was ever true during first loop return target for O(n)
+    for (let i = 0; i < 9; i += 3) {
         if(boardstate[i] == a){
             inarow += 1;
         }else if(boardstate[i] != -1){
@@ -101,10 +107,9 @@ function planmove(a){ //1 means defense; 0 means offense
             targethole = i;
         }
         if(inarow == 2 && canfill && i > 5){
-            console.log("here");
             return targethole;
         }
-        if(8 > i > 5){
+        if(8 > i && i > 5){
             inarow = 0;
             i -= 8;
             canfill = true;
@@ -112,7 +117,7 @@ function planmove(a){ //1 means defense; 0 means offense
     }
     inarow = 0;
 if(a == 0){
-    for(let i = 0; i < 9; i += 4){ 
+    for (let i = 0; i < 9; i += 4) { 
         if(boardstate[i] == -1){
             targethole = i;
             canfill = true;
@@ -125,11 +130,10 @@ if(a == 0){
         }
     }
     if(inarow == 2 && canfill){
-        console.log("here");
         return targethole;
     }
     inarow = 0;
-    for(let i = 2; i < 7; i += 2){ 
+    for (let i = 2; i < 7; i += 2) { 
         if(boardstate[i] == -1){
             targethole = i;
             canfill = true;
@@ -142,13 +146,12 @@ if(a == 0){
         }
     }
     if(inarow == 2 && canfill){
-        console.log("here");
         return targethole;
     }
     return -1;
 }else{
     inarow = 0;
-    for(let i = 0; i < 9; i += 4){ 
+    for (let i = 0; i < 9; i += 4) { 
         if(boardstate[i] == -1){
             targethole = i;
             canfill = true;
@@ -164,7 +167,7 @@ if(a == 0){
         return targethole;
     }
     inarow = 0;
-    for(let i = 2; i < 7; i += 2){ 
+    for (let i = 2; i < 7; i += 2) { 
         if(boardstate[i] == -1){
             targethole = i;
             canfill = true;
@@ -179,17 +182,15 @@ if(a == 0){
     if(inarow == 2 && canfill){
         return targethole;
     }
-    console.log("here");
-    return programmedmoves(settings[0]);
-}
-    
+        return programmedmoves(settings[0]);
+    }
 }
 
 function programmedmoves(a){
     if(a < 2){
         var cur = -1;
         var largest = -1;
-        for(let i = 0; i < 9; i++){
+        for (let i = 0; i < 9; i++) {
             if(boardstate[i] == -1){
                 var b = Math.random();
                 if(b > largest){
@@ -202,7 +203,7 @@ function programmedmoves(a){
     }else{
         var movenum = 0;
         var goldenmove = 0;
-        for(let i = 0; i < 9; i++){
+        for (let i = 0; i < 9; i++) {
             if(boardstate[i] != -1){
                 movenum += 1;
                 if(boardstate[i] == 1){
@@ -309,7 +310,6 @@ function programmedmoves(a){
             }
         }
     }
-    
 }
 
 
@@ -317,46 +317,40 @@ function programmedmoves(a){
 
 
 function analyzeboard(){
-// is it move 5?
 var c = 0;
-    for(let i = 0; i < 9; i++){
+    for (let i = 0; i < 9; i++) {
         if(boardstate[i] != -1){
             c++;
         }
     }
-    if(c > 4){ //check player win
+    if(c > 4){
         if(analyze(1)){
+            gameover = true;
             won();
         }
     }
     if(c == 9){
         draw();
     }
-    
-    
-    // pick a spot depending on level
     var move = -1;
-    var win = false;
     if(settings[0] == 0){
         move = programmedmoves(0);
     }else if(settings[0] == 1){
         move = planmove(1);
     }else if(settings[0] == 2){
         move = planmove(0);
-        win = true;
         if(move == -1){
             move = planmove(1);
-            win = false;
         }
     }else{
         console.log("Why try? Stop it; Get some help.");
     }
-    console.log(move);
     if(move == -1){
         draw();
     }else{
         boardstate[move] = 0;
-        if(win){
+        if(analyze(0)){ 
+            gameover = true;
             lost();
         }
         updateboard();
@@ -365,7 +359,7 @@ var c = 0;
     function won(){
         console.log("won");
     }
-    
+
     function lost(){
         console.log("lost");
     }
@@ -376,7 +370,7 @@ var c = 0;
 }
 
 function updateboard(){
-    for(let i = 0; i < 9; i++){
+        for (let i = 0; i < 9; i++) {
         if(boardstate[i] == 0){
             if(settings[1] == 0){
                 buttons[i].innerHTML = "X";
@@ -395,6 +389,9 @@ function updateboard(){
             buttons[i].innerHTML = "&#8205";
             buttons[i].disabled = false;
         }
+        }
+    if(gameover){
+        disablebuttons();
     }
 }
 
@@ -408,16 +405,21 @@ function initializeboard(){
         }else{
             boardstate[4] = -1;
         }
-        for(let i = 0; i < 9; i++){
+        for (let i = 0; i < 9; i++) {
             buttons[i].disabled = false;
         }
         updateboard();
     }else{
-        for(let i = 0; i < 9; i++){
-            buttons[i].disabled = true;
-        }
+        disablebuttons();
     }
 }
+
+function disablebuttons(){
+    for (let i = 0; i < 9; i++) {
+            buttons[i].disabled = true;
+    }
+}
+
 
 function initialize(){
     buttons[0] = document.getElementById("button1");
@@ -431,31 +433,6 @@ function initialize(){
     buttons[8] = document.getElementById("button9");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//WEBSITE FUNCTIONS FROM HERE 
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-
 var started = false;
 function clicked(a) {
     playermove(a);
@@ -464,24 +441,24 @@ function clicked(a) {
 function difficultyswap(a){
     if(!started){
         settings[0] = a;
+        initializeboard();
     }
-    initializeboard();
 }
 
 function firstswap(a){
     if(!started){
         settings[1] = a;
+        initializeboard();
     }
-    initializeboard();
 }
 
 function restart(){
     started = false;
-    for(let i = 0; i < 9; i++){
+    gameover = false;
+    for (let i = 0; i < 9; i++) {
         boardstate[i] = -1;
     }
     initializeboard();
-
 }
 
 

@@ -34,7 +34,7 @@ function playermove(a){
 
 
 
-function analyze(a){ //check boardstate for a given side (0/1)
+function analyze(a){
     var inarow = 0;
     for(let i = 0; i < 9; i++){ //check hori
         if(a != boardstate[i] || i%3 == 0){
@@ -70,7 +70,7 @@ function analyze(a){ //check boardstate for a given side (0/1)
 }
 
 
-function planmove(a){ //0 means defense; 1 means offense
+function planmove(a){ //1 means defense; 0 means offense
     var targethole = -1;
     var inarow = 0;
     var canfill = true;
@@ -86,21 +86,23 @@ function planmove(a){ //0 means defense; 1 means offense
         }else{
             targethole = i;
         }
-        if(inarow == 2 && canfill){
-            return i;
+        if(inarow == 2 && canfill && (i+1)%3 == 0){
+            console.log("here1");
+            return targethole;
         }
     }
-
+    inarow = 0;
     for(let i = 0; i < 9; i += 3){ // have 3 vars that add and if they equal 2 ,and fill was ever true during first loop return target for O(n)
-        if(boardstate[i] == 1){
+        if(boardstate[i] == a){
             inarow += 1;
         }else if(boardstate[i] != -1){
             canfill = false;
         }else{
             targethole = i;
         }
-        if(inarow == 2 && canfill){
-            return i;
+        if(inarow == 2 && canfill && i > 5){
+            console.log("here");
+            return targethole;
         }
         if(8 > i > 5){
             inarow = 0;
@@ -108,10 +110,12 @@ function planmove(a){ //0 means defense; 1 means offense
             canfill = true;
         }
     }
-if(a == 1){
+    inarow = 0;
+if(a == 0){
     for(let i = 0; i < 9; i += 4){ 
         if(boardstate[i] == -1){
             targethole = i;
+            canfill = true;
         }else{
             if(boardstate[i] == 0){
                 inarow += 1;
@@ -121,11 +125,14 @@ if(a == 1){
         }
     }
     if(inarow == 2 && canfill){
+        console.log("here");
         return targethole;
     }
+    inarow = 0;
     for(let i = 2; i < 7; i += 2){ 
         if(boardstate[i] == -1){
             targethole = i;
+            canfill = true;
         }else{
             if(boardstate[i] == 0){
                 inarow += 1;
@@ -135,31 +142,44 @@ if(a == 1){
         }
     }
     if(inarow == 2 && canfill){
+        console.log("here");
         return targethole;
     }
     return -1;
 }else{
-    for(let i = 0; i < 9; i += 4){ //since it has to be (2) ones, just add ,and void negatives.
+    inarow = 0;
+    for(let i = 0; i < 9; i += 4){ 
         if(boardstate[i] == -1){
             targethole = i;
+            canfill = true;
         }else{
-            inarow += boardstate[i];
+            if(boardstate[i] == 1){
+                inarow += 1;
+            }else{
+                canfill = false;
+            }
         }
     }
-    if(inarow == 2){
+    if(inarow == 2 && canfill){
         return targethole;
     }
-    for(let i = 2; i < 7; i += 2){
+    inarow = 0;
+    for(let i = 2; i < 7; i += 2){ 
         if(boardstate[i] == -1){
             targethole = i;
+            canfill = true;
         }else{
-            inarow += boardstate[i];
+            if(boardstate[i] == 1){
+                inarow += 1;
+            }else{
+                canfill = false;
+            }
         }
     }
-    if(inarow == 2){
+    if(inarow == 2 && canfill){
         return targethole;
     }
-
+    console.log("here");
     return programmedmoves(settings[0]);
 }
     
@@ -170,7 +190,7 @@ function programmedmoves(a){
         var cur = -1;
         var largest = -1;
         for(let i = 0; i < 9; i++){
-            if(boardstate[i] != -1){
+            if(boardstate[i] == -1){
                 var b = Math.random();
                 if(b > largest){
                     cur = i;
@@ -186,11 +206,11 @@ function programmedmoves(a){
             if(boardstate[i] != -1){
                 movenum += 1;
                 if(boardstate[i] == 1){
-                    goldenmove = 1;
+                    goldenmove = i;
                 }
             }
         }
-        if(movenum >= 4){ //4 if pc goes first; 2 if player goes first.
+        if(movenum >= 4){ 
             return programmedmoves(0);
         }else{
             if(settings[1] == 0){
@@ -198,7 +218,7 @@ function programmedmoves(a){
                     if(goldenmove > 0){
                         return 2;
                     }else{
-                        return 0;
+                        return 6;
                     }
                 }else{
                     if(goldenmove > 2){
@@ -300,7 +320,7 @@ function analyzeboard(){
 // is it move 5?
 var c = 0;
     for(let i = 0; i < 9; i++){
-        if(boardstate != -1){
+        if(boardstate[i] != -1){
             c++;
         }
     }
@@ -320,12 +340,12 @@ var c = 0;
     if(settings[0] == 0){
         move = programmedmoves(0);
     }else if(settings[0] == 1){
-        move = planmove(0);
-    }else if(settings[0] == 2){
         move = planmove(1);
+    }else if(settings[0] == 2){
+        move = planmove(0);
         win = true;
         if(move == -1){
-            move = planmove(0);
+            move = planmove(1);
             win = false;
         }
     }else{

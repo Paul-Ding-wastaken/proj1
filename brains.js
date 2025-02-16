@@ -326,6 +326,7 @@ var c = 0;
     if(c > 4){
         if(analyze(1)){
             gameover = true;
+            updateboard();
             won();
         }
     }
@@ -415,14 +416,15 @@ function initializeboard(){
         for (let i = 0; i < 9; i++) {
             buttons[i].disabled = false;
         }
-        updateboard();
     }else{
         disablebuttons();
     }
+    updateboard();
 }
 
 function disablebuttons(){
     for (let i = 0; i < 9; i++) {
+            buttons[i].style.backgroundColor = "#48A148";
             buttons[i].disabled = true;
     }
 }
@@ -465,20 +467,21 @@ function restart(){
     for (let i = 0; i < 9; i++) {
         boardstate[i] = -1;
     }
+    firstswap(document.getElementById("first").options[document.getElementById("first").selectedIndex].value);
+    difficultyswap(document.getElementById("difficulty").options[document.getElementById("difficulty").selectedIndex].value);
     initializeboard();
 }
 
 function initiatemove(a, b){
-    
     if(a == 0){
+        b.style.backgroundColor = "#48A148";
         b.children[0].style.transform = "translateY(-182px)";
-        console.log("down");
     }else if(a == 1){
+        b.style.backgroundColor = "#48A148";
         b.children[0].style.transform = "translateY(182px)";
-        console.log("up");
     }else{
+        b.style.backgroundColor = "#21dc62";
         b.children[0].style.transform = "translateY(0px)";
-        console.log("reset");
     }
 }
 

@@ -52,7 +52,7 @@ body {
     border-radius: 20px;
 }
 
-/* special thanks to Sergestra for the opensourced button! */ 
+/* Special thanks to Sergestra on Github for the inspiration*/ 
 
 .button {
     margin-left: 13px;
@@ -62,6 +62,7 @@ body {
     border-radius: 0.5em;
     box-shadow: 0 0.625em 1em 0 rgba(30, 143, 255, 0.35);
     overflow: hidden;
+    background-color: #21dc62;
    }
    
    .button div {

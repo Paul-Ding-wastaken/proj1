@@ -11,16 +11,16 @@
     <h1>
         Can you beat the Tic Tac Toe machine?
     </h1>
-    <body>
+    <body onload = "restart()">
         <div id = "layer1">
-            <select id="difficulty" class="settings" onchange="difficultyswap(this.options[this.selectedIndex].value)">
+            <select id="difficulty" class="settings" style = "text-align: center;" onchange="difficultyswap(this.options[this.selectedIndex].value)">
                 <option value="-1" id = "difdefault">Pick a difficulty</option>
                 <optgroup id = "difdefault1" label="Pick a difficulty" hidden></optgroup>
                 <option value="0">Easy</option>
                 <option value="1">Medium</option>
                 <option value="2">Hard</option>
             </select>
-            <select id="first" class="settings" onchange="firstswap(this.options[this.selectedIndex].value)">
+            <select id="first" class="settings" style = "text-align: center;" onchange="firstswap(this.options[this.selectedIndex].value)">
                 <option value="-1" id="firstdefault">Pick who goes first</option>
                 <optgroup id = "firstdefault1" label="Pick who goes first" hidden></optgroup>
                 <option value="0">Me first</option>
@@ -204,5 +204,4 @@
         </div>
         
     </body>
-    
 </html>

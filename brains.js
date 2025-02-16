@@ -332,7 +332,8 @@ var c = 0;
     if(c == 9){
         draw();
     }
-    var move = -1;
+    if(!gameover){
+        var move = -1;
     if(settings[0] == 0){
         move = programmedmoves(0);
     }else if(settings[0] == 1){
@@ -355,6 +356,8 @@ var c = 0;
         }
         updateboard();
     }
+    }
+    
 
     function won(){
         console.log("won");
@@ -373,20 +376,24 @@ function updateboard(){
         for (let i = 0; i < 9; i++) {
         if(boardstate[i] == 0){
             if(settings[1] == 0){
-                buttons[i].innerHTML = "X";
+                buttons[i].children[0].children[2].children[0].children[0].textContent = "X";
+                initiatemove(0, buttons[i]);
             }else{
-                buttons[i].innerHTML = "O";
+                buttons[i].children[0].children[2].children[0].children[0].textContent = "O";
+                initiatemove(0, buttons[i]);
             }
             buttons[i].disabled = true;
         }else if(boardstate[i] == 1){
             if(settings[1] == 1){
-                buttons[i].innerHTML = "X";
+                buttons[i].children[0].children[0].children[0].children[0].textContent = "X";
+                initiatemove(1, buttons[i]);
             }else{
-                buttons[i].innerHTML = "O";
+                buttons[i].children[0].children[0].children[0].children[0].textContent = "O";
+                initiatemove(1, buttons[i]);
             }
             buttons[i].disabled = true;
         }else{
-            buttons[i].innerHTML = "&#8205";
+            initiatemove(-1, buttons[i]);
             buttons[i].disabled = false;
         }
         }
@@ -461,6 +468,19 @@ function restart(){
     initializeboard();
 }
 
+function initiatemove(a, b){
+    
+    if(a == 0){
+        b.children[0].style.transform = "translateY(-182px)";
+        console.log("down");
+    }else if(a == 1){
+        b.children[0].style.transform = "translateY(182px)";
+        console.log("up");
+    }else{
+        b.children[0].style.transform = "translateY(0px)";
+        console.log("reset");
+    }
+}
 
 
 

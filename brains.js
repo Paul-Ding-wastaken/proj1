@@ -409,7 +409,6 @@ function updateboard(){
         }
         }
     if(gameover || settings[0] == -1 || settings[1] == -1 ){
-        
         disablebuttons();
     }
 }

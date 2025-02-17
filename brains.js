@@ -2,9 +2,11 @@ var boardstate = new Array(9).fill(-1);
 var settings = new Array(2).fill(-1);
 var buttons = new Array(9);
 var gameover = false;
-
+var buffering = false;
+var buffering2 = false;
 function playermove(a){
-    if(a < 1){
+    if(!buffering){
+        if(a < 1){
        return false; 
     }
     started = true;
@@ -27,8 +29,10 @@ function playermove(a){
         updateboard();
         analyzeboard();
     }else{
-        console.log("another cheater huh?")
+        console.log("another cheater huh?");
     }
+    }
+    
     
 }
 
@@ -333,43 +337,49 @@ var c = 0;
     if(c == 9){
         draw();
     }
-    if(!gameover){
-        var move = -1;
-    if(settings[0] == 0){
-        move = programmedmoves(0);
-    }else if(settings[0] == 1){
-        move = planmove(1);
-    }else if(settings[0] == 2){
-        move = planmove(0);
-        if(move == -1){
+    buffering = true;
+    setTimeout(() => {
+        buffering = false;
+        if(!gameover){
+            var move = -1;
+        if(settings[0] == 0){
+            move = programmedmoves(0);
+        }else if(settings[0] == 1){
             move = planmove(1);
+        }else if(settings[0] == 2){
+            move = planmove(0);
+            if(move == -1){
+                move = planmove(1);
+            }
         }
-    }else{
-        console.log("Why try? Stop it; Get some help.");
-    }
-    if(move == -1){
-        draw();
-    }else{
-        boardstate[move] = 0;
-        if(analyze(0)){ 
-            gameover = true;
-            lost();
+        
+            boardstate[move] = 0;
+            updateboard();
+            if(analyze(0)){ 
+                gameover = true;
+                updateboard();
+                lost();
+            }else if(c == 8){
+                draw();
+            }
+            
         }
-        updateboard();
-    }
-    }
-    
+        
+    }, 500);
 
     function won(){
-        console.log("won");
+        document.getElementById("layer3").children[0].textContent = "You Won!";
+        fadecycle();
     }
 
     function lost(){
-        console.log("lost");
+        document.getElementById("layer3").children[0].textContent = "You lost.";
+        fadecycle();
     }
 
     function draw(){
-        console.log("draw");
+        document.getElementById("layer3").children[0].textContent = "It's a draw.";
+        fadecycle();
     }
 }
 
@@ -398,16 +408,14 @@ function updateboard(){
             buttons[i].disabled = false;
         }
         }
-    if(gameover){
+    if(gameover || settings[0] == -1 || settings[1] == -1 ){
+        
         disablebuttons();
     }
 }
 
 function initializeboard(){
-    if(!buttons[0]){
-        initialize();
-    }
-    if(settings[0] != -1 && settings[1] != -1){
+    
         if(settings[1] == 0){
             boardstate[4] = 0;   
         }else{
@@ -416,9 +424,7 @@ function initializeboard(){
         for (let i = 0; i < 9; i++) {
             buttons[i].disabled = false;
         }
-    }else{
-        disablebuttons();
-    }
+    
     updateboard();
 }
 
@@ -448,6 +454,10 @@ function clicked(a) {
 }
 
 function difficultyswap(a){
+    if(a > -1){
+        document.getElementById("difdefault").hidden = true;
+        document.getElementById("difdefault1").hidden = false;
+    }
     if(!started){
         settings[0] = a;
         initializeboard();
@@ -455,6 +465,10 @@ function difficultyswap(a){
 }
 
 function firstswap(a){
+    if(a > -1){
+        document.getElementById("firstdefault").hidden = true;
+        document.getElementById("firstdefault1").hidden = false;
+    }
     if(!started){
         settings[1] = a;
         initializeboard();
@@ -462,14 +476,39 @@ function firstswap(a){
 }
 
 function restart(){
-    started = false;
-    gameover = false;
-    for (let i = 0; i < 9; i++) {
-        boardstate[i] = -1;
+    if(!buttons[0]){
+        initialize();
     }
-    firstswap(document.getElementById("first").options[document.getElementById("first").selectedIndex].value);
-    difficultyswap(document.getElementById("difficulty").options[document.getElementById("difficulty").selectedIndex].value);
-    initializeboard();
+    if(!buffering){
+        document.getElementById("layer3").style.opacity = 0;
+        restarting(true);
+        buffering = true;
+        setTimeout(() => {
+            buffering = false;
+        started = false;
+        gameover = false;
+        for (let i = 0; i < 9; i++) {
+        boardstate[i] = -1;
+     }
+    updateboard();
+    setTimeout(() => {
+        document.getElementById("layer3").style.opacity = 0;
+        firstswap(document.getElementById("first").options[document.getElementById("first").selectedIndex].value);
+        difficultyswap(document.getElementById("difficulty").options[document.getElementById("difficulty").selectedIndex].value);
+        initializeboard();
+    }, 750);
+    
+        }, 500);
+    }else{
+        if(!buffering2){
+            document.getElementById("layer3").style.opacity = 0;
+            buffering2 = true;
+            restarting(false);
+        }
+        
+    }
+    
+    
 }
 
 function initiatemove(a, b){
@@ -485,8 +524,39 @@ function initiatemove(a, b){
     }
 }
 
+function restarting(a){
+    if(a){
+        document.getElementById("layer3").children[0].textContent = "Restarting...";
+        fadecycle(0);
+    }else{
+        document.getElementById("layer3").children[0].textContent = "Please wait.";
+        fadecycle(0);
+        buffering2 = false;
+    }
+}
 
-
+function fadecycle(c){
+    if(!buffering && !buffering2){
+        var a = document.getElementById("layer3");
+    var b = 0;  
+    let intervalID = setInterval(fadein, 50); 
+    function fadein() {
+        if (b < 1) { 
+            b += 0.05;
+            a.style.opacity = b;
+        } else {
+            clearInterval(intervalID);
+        }
+    }
+    if(c == 0){
+       setTimeout(() => {
+        a.style.opacity = 0;
+        }, 2000); 
+    }
+    }
+    
+    
+}
 
 
 
